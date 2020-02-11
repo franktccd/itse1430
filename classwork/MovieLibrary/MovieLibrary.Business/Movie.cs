@@ -8,14 +8,19 @@ namespace MovieLibrary.Business
 {
     public class Movie
     {
-        string title;
+        public string Title
+        {
+            get { return _title;  }
+            set { _title = value; }
+        }
+        private string _title;
 
-        int runLength;
+        public int runLength;
 
-        string description;
+        public string description;
 
-        int releaseYear;
+        public int releaseYear;
 
-        bool isClassic;        
+        public bool isClassic;        
     }
 }
