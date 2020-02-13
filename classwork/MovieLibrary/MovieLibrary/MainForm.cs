@@ -16,12 +16,12 @@ namespace MovieLibrary
 
             //Full name
             //MovieLibrary.Business.Movie;
-            var movie = new Movie();
+            //var movie = new Movie();
 
-            movie.title = "Jaws";
-            movie.description = movie.title;
+            //movie.Title = "Jaws";
+            //movie.description = movie.Title;
 
-            movie = new Movie();
+            //movie = new Movie();
 
             //DisplayMovie(movie);
             //DisplayMovie(null);
@@ -64,8 +64,8 @@ namespace MovieLibrary
             if (movie == null)
                 return;
 
-            var title = movie.title;
-            movie.description = "Test";
+            var title = movie.Title;
+            movie.Description = "Test";
 
             movie = new Movie();
         }
@@ -79,8 +79,36 @@ namespace MovieLibrary
                 return;
 
             //TODO: Save the movie
+            _movie = child.Movie;
             //child.ShowDialog(); - modal
             //child.Show(); //- modeless
+        }
+
+        private Movie _movie;
+
+        private void OnMovieDelete ( object sender, EventArgs e )
+        {
+            //Verify movie
+            if (_movie == null)
+                return;
+
+            if (!DisplayConfirmation($"Are you sure you want to delete {_movie.Title}?", "Delete"))
+                return;
+
+            //TODO: Delete
+            _movie = null;
+        }
+
+        private void OnFileExit ( object sender, EventArgs e )
+        {
+            Close();
+        }
+
+        private void OnHelpAbout ( object sender, EventArgs e )
+        {
+            var about = new AboutBox();
+
+            about.ShowDialog(this);
         }
     }
 }
