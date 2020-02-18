@@ -18,12 +18,25 @@ namespace MovieLibrary.WinForms
             InitializeComponent();
         }
 
-        public Movie Movie
+        public MovieForm (Movie movie)
+        {
+            Movie = movie;
+        }
+
+        public MovieForm(string title, Movie movie)
+        {
+            Text = title;
+            Movie = movie;
+        }
+
+        public Movie Movie {get; set;}
+
+        /*public Movie Movie
         {
             get { return _movie;}
             set { _movie = value; }
         }
-        private Movie _movie;
+        private Movie _movie;*/
 
         private void OnCancel ( object sender, EventArgs e )
         {
