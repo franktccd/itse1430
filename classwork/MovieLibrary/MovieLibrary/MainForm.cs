@@ -71,10 +71,35 @@ namespace MovieLibrary
         }
         #endregion
 
+        protected override void OnFormClosing ( FormClosingEventArgs e )
+        {
+            base.OnFormClosing(e);
+
+            if (_movie != null)
+                if (!DisplayConfirmation("Are you sure you want to close?", "Close"))
+                    e.Cancel = true;
+        }
+
         private void OnMovieAdd ( object sender, EventArgs e )
         {
             MovieForm child = new MovieForm();
 
+            if (child.ShowDialog(this) != DialogResult.OK)
+                return;
+
+            //TODO: Save the movie
+            _movie = child.Movie;
+            //child.ShowDialog(); - modal
+            //child.Show(); //- modeless
+        }
+
+        private void OnMovieEdit ( object sender, EventArgs e )
+        {
+            if (_movie == null)
+                return;
+
+            var child = new MovieForm();
+            child.Movie = _movie;
             if (child.ShowDialog(this) != DialogResult.OK)
                 return;
 

@@ -13,21 +13,36 @@ namespace MovieLibrary.WinForms
 {
     public partial class MovieForm : Form
     {
+        #region Constructors
         public MovieForm ()
         {
             InitializeComponent();
         }
 
-        public MovieForm (Movie movie)
+        //Call the more specific constructor first - constructor chaining
+        public MovieForm (Movie movie) : this(movie != null ? "Edit" : "Add", movie)
         {
-            Movie = movie;
+            //InitializeComponent();
+            //Movie = movie;
+            
+            //Text = movie != null ? "Edit" : "Add";
         }
 
-        public MovieForm(string title, Movie movie)
+        public MovieForm(string title, Movie movie) : this()
         {
             Text = title;
             Movie = movie;
         }
+
+        //private void Initialize (string title, Movie movie)
+        //{
+        //    InitializeComponent();
+        //
+        //    Text = title;
+        //    Movie = movie;
+        //}
+
+        #endregion
 
         public Movie Movie {get; set;}
 
@@ -38,6 +53,7 @@ namespace MovieLibrary.WinForms
         }
         private Movie _movie;*/
 
+        #region Event Handlers
         private void OnCancel ( object sender, EventArgs e )
         {
             DialogResult = DialogResult.Cancel;
@@ -52,11 +68,26 @@ namespace MovieLibrary.WinForms
             {
                 DisplayError(error);
                 return;
-            }
+            };
 
             Movie = movie;
             DialogResult = DialogResult.OK;
             Close();
+        }
+        #endregion
+
+        protected override void OnLoad ( EventArgs e )
+        {
+            base.OnLoad(e);
+
+            if (Movie != null)
+            {
+                txtTitle.Text = Movie.Title;
+                txtDescription.Text = Movie.Description;
+                txtReleaseYear.Text = Movie.ReleaseYear.ToString();
+                txtRunLength.Text = Movie.RunLength.ToString();
+                chkIsClassic.Checked = Movie.IsClassic;
+            };
         }
 
         private Movie GetMovie ()
