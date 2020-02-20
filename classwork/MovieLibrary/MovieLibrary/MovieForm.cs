@@ -80,6 +80,10 @@ namespace MovieLibrary.WinForms
         {
             base.OnLoad(e);
 
+            //populate combo
+            var genres = Genres.GetAll();
+            ddlGenres.Items.AddRange(genres);
+
             if (Movie != null)
             {
                 txtTitle.Text = Movie.Title;
@@ -87,6 +91,11 @@ namespace MovieLibrary.WinForms
                 txtReleaseYear.Text = Movie.ReleaseYear.ToString();
                 txtRunLength.Text = Movie.RunLength.ToString();
                 chkIsClassic.Checked = Movie.IsClassic;
+
+                if(Movie.Genre != null)
+                {
+                    ddlGenres.SelectedText = Movie.Genre.Description;
+                }
             };
         }
 
@@ -101,6 +110,20 @@ namespace MovieLibrary.WinForms
             movie.Description = txtDescription.Text.Trim();
             movie.IsClassic = chkIsClassic.Checked;
 
+            //movie.Genre = (Genre)ddlGenres.SelectedItem; // C-Style cast, crashes if wrong
+
+            //var genre = ddlGenres.SelectedItem as Genre; //preferred
+            //if (genre != null)
+            //    movie.Genre = genre;
+
+            //Equivalent of as
+            //if (ddlGenres.SelectedItem is Genre)
+            //    genre = (Genre)ddlGenres.SelectedItem;
+
+            //Pattern Match
+            if (ddlGenres.SelectedItem is Genre genre)
+                movie.Genre = genre;
+            //movie.Genre = ddlGenres.SelectedItem;
             return movie;
         }
 
@@ -134,6 +157,11 @@ namespace MovieLibrary.WinForms
             #endregion
 
             MessageBox.Show(message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        private void Label5_Click ( object sender, EventArgs e )
+        {
+
         }
     }
 }
