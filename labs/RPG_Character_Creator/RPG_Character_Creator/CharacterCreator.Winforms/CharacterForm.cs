@@ -95,5 +95,25 @@ namespace CharacterCreator.Winforms
         {
             MessageBox.Show(message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
+
+        private void OnOK ( object sender, EventArgs e )
+        {
+            var character = GetCharacter();
+            if(!character.Validate(out var error))
+            {
+                DisplayError(error);
+                return;
+            }
+
+            Character = character;
+            DialogResult = DialogResult.OK;
+            Close();
+        }
+
+        private void OnCancel ( object sender, EventArgs e )
+        {
+            DialogResult = DialogResult.Cancel;
+            Close();
+        }
     }
 }
