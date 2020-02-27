@@ -80,6 +80,11 @@ namespace MovieLibrary.Business
         //private int _id;
         public int Id { get; }
 
+        public override string ToString ()
+        {
+            return Title;
+        }
+
         public bool Validate (out string error)
         {
             //Title is required

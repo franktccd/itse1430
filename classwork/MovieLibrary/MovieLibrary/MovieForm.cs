@@ -62,6 +62,8 @@ namespace MovieLibrary.WinForms
 
         private void OnOK ( object sender, EventArgs e )
         {
+            if (!ValidateChildren())
+                return;
             //Validation and error reporting
             var movie = GetMovie();
             if (!movie.Validate(out var error))
@@ -96,6 +98,8 @@ namespace MovieLibrary.WinForms
                 {
                     ddlGenres.SelectedText = Movie.Genre.Description;
                 }
+
+                ValidateChildren();
             };
         }
 
@@ -162,6 +166,45 @@ namespace MovieLibrary.WinForms
         private void Label5_Click ( object sender, EventArgs e )
         {
 
+        }
+
+        private void OnValidateTitle ( object sender, CancelEventArgs e )
+        {
+            var control = sender as TextBox;
+
+            if (String.IsNullOrEmpty(control.Text))
+            {
+                //DisplayError("Title is required.");
+                _errors.SetError(control, "Title is required.");
+                e.Cancel = true;
+            } else
+                _errors.SetError(control, "");
+        }
+
+        private void OnValidateRunLength ( object sender, CancelEventArgs e )
+        {
+            var control = sender as Control;
+            var value = GetAsInt32(control, 0);
+            if(value < 0)
+            {
+                //DisplayError("Run length must be >= 0.");
+                _errors.SetError(control, "Run length must be >= 0.");
+                e.Cancel = true;
+            } else
+                _errors.SetError(control, "");
+        }
+
+        private void OnValidateReleaseYear ( object sender, CancelEventArgs e )
+        {
+            var control = sender as Control;
+            var value = GetAsInt32(control, 1900);
+            if (value < 1900)
+            {
+                //DisplayError("Release year must be >= 1900.");
+                _errors.SetError(control, "Release year must be >= 1900.");
+                e.Cancel = true;
+            } else
+                _errors.SetError(control, "");
         }
     }
 }
