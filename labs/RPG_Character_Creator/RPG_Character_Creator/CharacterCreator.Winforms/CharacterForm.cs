@@ -99,11 +99,11 @@ namespace CharacterCreator.Winforms
         private void OnOK ( object sender, EventArgs e )
         {
             var character = GetCharacter();
-            if(!character.Validate(out var error))
+            if (!character.Validate(out var error))
             {
                 DisplayError(error);
                 return;
-            }
+            };
 
             Character = character;
             DialogResult = DialogResult.OK;
