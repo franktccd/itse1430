@@ -1,4 +1,8 @@
-﻿using System;
+﻿//Frank Rygiewicz
+//ITSE-1430-21722
+//2/20/2020
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -42,34 +46,46 @@ namespace CharacterCreator
                 return false;
             }
 
-            if (Strength < 0 || Strength > 100)
+            if(Race == null)
             {
-                error = "Attribute must be between 0 and 100";
+                error = "Race is required";
                 return false;
             }
-            if (Agility < 0 || Agility > 100)
+
+            if (Profession == null)
             {
-                error = "Attribute must be between 0 and 100";
+                error = "Profession is required";
                 return false;
             }
-            if (Constitution < 0 || Constitution > 100)
+
+            if (Strength < 1 || Strength > 100)
             {
-                error = "Attribute must be between 0 and 100";
+                error = "Strength must be between 1 and 100";
                 return false;
             }
-            if (Intelligence < 0 || Intelligence > 100)
+            if (Agility < 1 || Agility > 100)
             {
-                error = "Attribute must be between 0 and 100";
+                error = "Agility must be between 1 and 100";
                 return false;
             }
-            if (Wisdom < 0 || Wisdom > 100)
+            if (Constitution < 1 || Constitution > 100)
             {
-                error = "Attribute must be between 0 and 100";
+                error = "Constitution must be between 1 and 100";
                 return false;
             }
-            if (Charisma < 0 || Charisma > 100)
+            if (Intelligence < 1 || Intelligence > 100)
             {
-                error = "Attribute must be between 0 and 100";
+                error = "Intelligence must be between 1 and 100";
+                return false;
+            }
+            if (Wisdom < 1 || Wisdom > 100)
+            {
+                error = "Wisdom must be between 1 and 100";
+                return false;
+            }
+            if (Charisma < 1 || Charisma > 100)
+            {
+                error = "Charisma must be between 1 and 100";
                 return false;
             }
 
@@ -83,10 +99,10 @@ namespace CharacterCreator
     {
         public Race ( string description )
         {
-            Description = description ?? "";
+            Description = description ?? "Value could not be transferred";
         }
 
-        public string Description { get; }
+        public string Description { get; set; }
 
         public override string ToString ()
         {
@@ -115,10 +131,10 @@ namespace CharacterCreator
     {
         public Profession ( string description )
         {
-            Description = description ?? "";
+            Description = description ?? "Value could not be transferred";
         }
 
-        public string Description { get; }
+        public string Description { get; set; }
 
         public override string ToString ()
         {

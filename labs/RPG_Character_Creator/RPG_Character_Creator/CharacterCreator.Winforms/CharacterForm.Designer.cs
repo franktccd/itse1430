@@ -275,6 +275,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "CharacterForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Create New Character";
             this.ResumeLayout(false);
             this.PerformLayout();

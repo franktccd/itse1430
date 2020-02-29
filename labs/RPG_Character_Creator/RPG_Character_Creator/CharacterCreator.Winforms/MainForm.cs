@@ -1,4 +1,8 @@
-﻿using System;
+﻿//Frank Rygiewicz
+//ITSE-1430-21722
+//2/20/2020
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -59,5 +63,30 @@ namespace CharacterCreator.Winforms
         }
 
         private Character _character;
+
+        private void OnCharacterEdit ( object sender, EventArgs e )
+        {
+            if (_character == null)
+            {
+                DisplayError("You need to create a new character before editing.");
+                return;
+            }
+            var child = new CharacterForm();
+
+            child.Character = _character;
+            if (child.ShowDialog(this) != DialogResult.OK)
+                return;
+            _character = child.Character;
+        }
+
+        private void OnCharacterDelete ( object sender, EventArgs e )
+        {
+            if (_character == null)
+            {
+                DisplayError("There is no character to delete.");
+                return;
+            }
+            _character = null;
+        }
     }
 }

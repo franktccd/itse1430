@@ -1,4 +1,8 @@
-﻿using System;
+﻿//Frank Rygiewicz
+//ITSE-1430-21722
+//2/20/2020
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,6 +16,7 @@ namespace CharacterCreator.Winforms
 {
     public partial class CharacterForm : Form
     {
+        #region Ctors
         public CharacterForm ()
         {
             InitializeComponent();
@@ -24,7 +29,7 @@ namespace CharacterCreator.Winforms
             Name = name;
             Character = character;
         }
-
+        #endregion 
         public Character Character { get; set; }
 
         protected override void OnLoad ( EventArgs e )
@@ -36,9 +41,10 @@ namespace CharacterCreator.Winforms
 
             var races = Races.GetAll();
             ddlRace.Items.AddRange(races);
-            if(Character != null)
+
+            if (Character != null)
             {
-                txtName.Name = Character.Name;
+                txtName.Text = Character.Name;
                 txtDescription.Text = Character.Description;
                 txtStrength.Text = Character.Strength.ToString();
                 txtAgility.Text = Character.Agility.ToString();
@@ -46,11 +52,8 @@ namespace CharacterCreator.Winforms
                 txtIntelligence.Text = Character.Intelligence.ToString();
                 txtWisdom.Text = Character.Wisdom.ToString();
                 txtCharisma.Text = Character.Charisma.ToString();
-
-                if (Character.Profession != null)
-                    ddlProfession.SelectedText = Character.Profession.Description;
-                if (Character.Race != null)
-                    ddlRace.SelectedText = Character.Race.Description;
+                ddlProfession.Text = Character.Profession.Description;
+                ddlRace.Text = Character.Race.Description;
             }
         }
 
@@ -58,7 +61,7 @@ namespace CharacterCreator.Winforms
         {
             var character = new Character();
 
-            character.Name = txtName.Name?.Trim();
+            character.Name = txtName.Text?.Trim();
             character.Description = txtDescription.Text.Trim();
             character.Strength = GetAsInt32(txtStrength);
             character.Agility = GetAsInt32(txtAgility);
@@ -76,10 +79,10 @@ namespace CharacterCreator.Winforms
             return character;
 
         }
-
+        #region Type Coercion
         private int GetAsInt32 ( Control control )
         {
-            return GetAsInt32(control, 0);
+            return GetAsInt32(control, 50);
         }
 
         private int GetAsInt32(Control control, int emptyValue)
@@ -90,7 +93,8 @@ namespace CharacterCreator.Winforms
                 return result;
             return -1;
         }
-
+        #endregion
+        #region Event Handlers
         private void DisplayError (string message)
         {
             MessageBox.Show(message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -115,5 +119,6 @@ namespace CharacterCreator.Winforms
             DialogResult = DialogResult.Cancel;
             Close();
         }
+        #endregion
     }
 }

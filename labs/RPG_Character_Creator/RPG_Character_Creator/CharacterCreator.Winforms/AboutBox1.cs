@@ -1,4 +1,8 @@
-﻿using System;
+﻿//Frank Rygiewicz
+//ITSE-1430-21722
+//2/20/2020
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -14,12 +18,12 @@ namespace CharacterCreator.Winforms
         public AboutBox1 ()
         {
             InitializeComponent();
-            this.Text = String.Format("About {0}", AssemblyTitle);
-            this.labelProductName.Text = AssemblyProduct;
+            this.Text = "About Character Creator";
+            this.labelProductName.Text = "Character Creator";
             this.labelVersion.Text = String.Format("Version {0}", AssemblyVersion);
-            this.labelCopyright.Text = AssemblyCopyright;
-            this.labelCompanyName.Text = AssemblyCompany;
-            this.textBoxDescription.Text = AssemblyDescription;
+            this.labelCopyright.Text = "Frank Rygiewicz, 2020";
+            this.labelCompanyName.Text = "ITSE-1430-21722";
+            this.textBoxDescription.Text = "This application is used to create a character for an RPG game";
         }
 
         #region Assembly Attribute Accessors
