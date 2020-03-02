@@ -86,6 +86,8 @@ namespace CharacterCreator.Winforms
                 DisplayError("There is no character to delete.");
                 return;
             }
+            if (!DisplayConfirmation("Are you sure you want to delete your character?", "Delete"))
+                return;
             _character = null;
         }
     }

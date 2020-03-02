@@ -82,7 +82,7 @@ namespace CharacterCreator.Winforms
         #region Type Coercion
         private int GetAsInt32 ( Control control )
         {
-            return GetAsInt32(control, 50);
+            return GetAsInt32(control, 0);
         }
 
         private int GetAsInt32(Control control, int emptyValue)
