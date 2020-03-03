@@ -95,7 +95,7 @@ namespace MovieLibrary
                 return;
 
             //TODO: Save the movie
-            AddMovieHelper(child.Movie);
+            _movies.Add(child.Movie);
             UpdateUI();
             //child.ShowDialog(); - modal
             //child.Show(); //- modeless
@@ -104,61 +104,18 @@ namespace MovieLibrary
         private void UpdateUI()
         {
             lstMovies.Items.Clear();
-            var movies = GetMovies();
+            var movies = _movies.GetAll();
             foreach (var movie in movies)
             {
-                if(movie != null)
-                    lstMovies.Items.Add(movie);
+                lstMovies.Items.Add(movie);
             };
         }
-
-        private void AddMovieHelper(Movie movie)
-        {
-            for(var index = 0; index < _movies.Length; ++index)
-            {
-                if(_movies[index] == null)
-                {
-                    _movies[index] = movie;
-                    break;
-                };
-            };
-        }
-
-        private Movie[] GetMovies ()
-        {
-            return _movies;
-        }
-
+                
         private Movie GetSelectedMovie()
         {
             return lstMovies.SelectedItem as Movie;
         }
-
-        private void UpdateMovie ( Movie oldMovie, Movie newMovie )
-        {
-            for (var index = 0; index < _movies.Length; ++index)
-            {
-                if (_movies[index] == oldMovie)
-                {
-                    _movies[index] = newMovie;
-                    break;
-                };
-            };
-        }
-
-        private void DeleteMovie ( Movie movie )
-        {
-            for (var index = 0; index < _movies.Length; ++index)
-            {
-                if (_movies[index] == movie)
-                {
-                    _movies[index] = null;
-                    break;
-                };
-            };
-            UpdateUI();
-        }
-
+                
         private void OnMovieEdit ( object sender, EventArgs e )
         {
             var movie = GetSelectedMovie();
@@ -171,7 +128,7 @@ namespace MovieLibrary
                 return;
 
             //TODO: Save the movie
-            UpdateMovie(movie, child.Movie);
+            _movies.Update(movie, child.Movie);
             UpdateUI();
             //movie = child.Movie;
             //child.ShowDialog(); - modal
@@ -179,7 +136,7 @@ namespace MovieLibrary
         }
 
         //private Movie _movie;
-        private Movie[] _movies = new Movie[100];
+        private readonly MovieDatabase _movies = new MovieDatabase();
 
         private void OnMovieDelete ( object sender, EventArgs e )
         {
@@ -192,7 +149,8 @@ namespace MovieLibrary
                 return;
 
             //TODO: Delete
-            DeleteMovie(movie);
+            _movies.Delete(movie);
+            UpdateUI();
         }
 
         private void OnFileExit ( object sender, EventArgs e )
