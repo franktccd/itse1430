@@ -12,6 +12,8 @@ namespace MovieLibrary
         {
             InitializeComponent();
 
+            _movies = new MemoryMovieDatabase();
+
             #region Playing with objects
 
             //Full name
@@ -75,6 +77,7 @@ namespace MovieLibrary
         {
             base.OnLoad(e);
 
+            new SeedDatabase().SeedIfEmpty(_movies);
             UpdateUI();
         }
 
@@ -91,14 +94,23 @@ namespace MovieLibrary
         {
             MovieForm child = new MovieForm();
 
-            if (child.ShowDialog(this) != DialogResult.OK)
-                return;
+            do
+            {
 
-            //TODO: Save the movie
-            _movies.Add(child.Movie);
-            UpdateUI();
-            //child.ShowDialog(); - modal
-            //child.Show(); //- modeless
+                if (child.ShowDialog(this) != DialogResult.OK)
+                    return;
+
+                //TODO: Save the movie
+                var movie = _movies.Add(child.Movie);
+                _movies.Add(child.Movie);
+                if (movie != null)
+                {
+                    UpdateUI();
+                    return;
+                }
+                //child.ShowDialog(); - modal
+                //child.Show(); //- modeless
+            } while (true);
         }
 
         private void UpdateUI()
@@ -124,19 +136,31 @@ namespace MovieLibrary
 
             var child = new MovieForm();
             child.Movie = movie;
-            if (child.ShowDialog(this) != DialogResult.OK)
-                return;
+            do
+            {
+                if (child.ShowDialog(this) != DialogResult.OK)
+                    return;
 
-            //TODO: Save the movie
-            _movies.Update(movie, child.Movie);
-            UpdateUI();
+                //TODO: Save the movie
+                var error = _movies.Update(movie.Id, child.Movie);
+                _movies.Update(movie.Id, child.Movie);
+                if (String.IsNullOrEmpty(error))
+                {
+                    UpdateUI();
+                    return;
+                }
+                DisplayError(error);
+            }
+            while (true);
+
+            //UpdateUI();
             //movie = child.Movie;
             //child.ShowDialog(); - modal
             //child.Show(); //- modeless
         }
 
         //private Movie _movie;
-        private readonly MovieDatabase _movies = new MovieDatabase();
+        private readonly IMovieDatabase _movies;
 
         private void OnMovieDelete ( object sender, EventArgs e )
         {
@@ -149,7 +173,7 @@ namespace MovieLibrary
                 return;
 
             //TODO: Delete
-            _movies.Delete(movie);
+            _movies.Delete(movie.Id);
             UpdateUI();
         }
 
