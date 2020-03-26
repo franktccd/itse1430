@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 
 using MovieLibrary.Business;
+using MovieLibrary.Business.Memory;
 using MovieLibrary.WinForms;
 
 namespace MovieLibrary
@@ -76,8 +77,10 @@ namespace MovieLibrary
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+            
+            _movies.SeedIfEmpty();
+            //SeedDatabase.SeedIfEmpty(_movies); //Compiles to this
 
-            new SeedDatabase().SeedIfEmpty(_movies);
             UpdateUI();
         }
 

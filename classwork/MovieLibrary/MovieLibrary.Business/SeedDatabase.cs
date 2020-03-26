@@ -6,16 +6,23 @@ using System.Threading.Tasks;
 
 namespace MovieLibrary.Business
 {
-    public class SeedDatabase
+    public static class SeedDatabase
     {
-        public IMovieDatabase SeedIfEmpty(IMovieDatabase database)
+        //Extension method
+        public static IMovieDatabase SeedIfEmpty(this IMovieDatabase database)
         {
-            if(database.GetAll().Length == 0)
+            if(database.GetAll().Any())
             {
-                database.Add(new Movie() {Title = "Jaws", RunLength = 120, ReleaseYear = 1977});
-                database.Add(new Movie() { Title = "Jaws 2", RunLength = 120, ReleaseYear = 1977 });
-                database.Add(new Movie() { Title = "Star Wars", RunLength = 120, ReleaseYear = 1977 });
-                database.Add(new Movie() { Title = "Tremors", RunLength = 120, ReleaseYear = 1977 });
+                //Object Initializer
+                var demo = new Movie() { Title = "Dune", RunLength = 260, ReleaseYear = 1985 };
+                //Collection Initializer
+                var items = new Movie[]
+                    {
+                        new Movie() {Title = "Jaws", RunLength = 120, ReleaseYear = 1977},
+                        new Movie() { Title = "Jaws 2", RunLength = 120, ReleaseYear = 1977 },
+                        demo,
+                    };
+                
             };
 
             return database;
