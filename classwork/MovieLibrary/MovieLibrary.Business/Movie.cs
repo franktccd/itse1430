@@ -14,21 +14,10 @@ namespace MovieLibrary.Business
         /// <summary>Gets or sets the title.</summary>
         public string Title
         {
-            get 
-            {
-                //Long, long way
-                //if (_title == null)
-                //    return "";
-
-                //return _title;
-
-                //Long way
-                //return (_title != null) ? _title : "";
-
-                //Correct
-                return _title ?? "";
-            }
-            set { _title = value?.Trim(); }
+            // get {  return _title ?? "";  }
+            get => _title ?? ""; // Expression body
+            //set { _title = value?.Trim(); }
+            set => _title = value?.Trim();
         }
         private string _title;
 
@@ -44,8 +33,8 @@ namespace MovieLibrary.Business
         /// <summary>Gets or sets the description.</summary>
         public string Description
         {
-            get { return _description ?? ""; }
-            set { _description = value?.Trim(); }
+            get => _description ?? "";
+            set => _description = value?.Trim();
         }
         private string _description;
 
@@ -68,10 +57,10 @@ namespace MovieLibrary.Business
         //private bool _isClassic;
         public bool IsClassic { get; set; }
 
-        public bool IsBlackAndWhite
-        {
-            get { return ReleaseYear <= 1930; }
-        }
+        public bool IsBlackAndWhite => ReleaseYear <= 1930;
+        //{
+        //    get => ReleaseYear <= 1930; 
+        //}
 
         //public int Id
         //{
@@ -81,10 +70,10 @@ namespace MovieLibrary.Business
         //private int _id;
         public int Id { get; set; }
 
-        public override string ToString ()
-        {
-            return Title;
-        }
+        public override string ToString () => Title;
+        //{
+        //    return Title;
+        //}
         public IEnumerable<ValidationResult> Validate ( ValidationContext validationContext )
         {
             //Title is required

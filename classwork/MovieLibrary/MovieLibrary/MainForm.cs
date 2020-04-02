@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows.Forms;
 
 using MovieLibrary.Business;
@@ -116,19 +117,36 @@ namespace MovieLibrary
             } while (true);
         }
 
+        //private string SortByTitle ( Movie movie ) => movie.Title;
+        //private int SortByReleaseYear ( Movie movie ) => movie.ReleaseYear;
         private void UpdateUI()
         {
             lstMovies.Items.Clear();
-            var movies = _movies.GetAll();
-            foreach (var movie in movies)
-            {
-                lstMovies.Items.Add(movie);
-            };
+            //Extension method approach
+            //var movies = _movies.GetAll()
+            //    .OrderBy(movie => movie.Title)
+            //    .ThenByDescending(movie => movie.ReleaseYear)
+            //    ;
+
+            //LINQ syntax
+            var movies = from movie in _movies.GetAll()
+                         orderby movie.Title, movie.ReleaseYear descending
+                         select movie;
+
+            lstMovies.Items.AddRange(movies.ToArray());
+            //foreach (var movie in movies)
+            //{
+            //    lstMovies.Items.Add(movie);
+            //};
         }
                 
         private Movie GetSelectedMovie()
         {
-            return lstMovies.SelectedItem as Movie;
+            //return lstMovies.SelectedItem as Movie;
+
+            //SelectedObjectCollection : IEnumerable
+            var selectedItems = lstMovies.SelectedItems.OfType<Movie>();
+            return selectedItems.FirstOrDefault();
         }
                 
         private void OnMovieEdit ( object sender, EventArgs e )

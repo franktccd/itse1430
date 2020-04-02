@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+
 
 namespace MovieLibrary.Business.Memory
 {
@@ -54,6 +56,14 @@ namespace MovieLibrary.Business.Memory
 
         protected override IEnumerable<Movie> GetAllCore ()
         {
+
+            //Filtering
+            var items = _movies.Where(m => true);
+
+            //Transforms
+            return _movies.Select(m => CloneMovie(m));
+
+            
             //return _movies;
             //Clone objects   
             //var items = new Movie[_movies.Count];
@@ -64,10 +74,14 @@ namespace MovieLibrary.Business.Memory
             //}
             //return items;
 
-            foreach(var movie in _movies)
-            {
-                yield return CloneMovie(movie);
-            };
+            //Debug.WriteLine("Starting GetAllCore");
+
+            //foreach(var movie in _movies)
+            //{
+            //    Debug.WriteLine($"Returning {movie.Id}");
+            //    yield return CloneMovie(movie);
+            //    Debug.WriteLine($"Returned {movie.Id}");
+            //};
         }
 
         protected override void UpdateCore ( int id, Movie movie )
@@ -92,16 +106,33 @@ namespace MovieLibrary.Business.Memory
             target.RunLength = source.RunLength;
         }
 
-        protected override Movie FindByTitle ( string title )
+        //Example of more complex querying with programmatic filters
+        private IEnumerable<Movie> Query( string title, int releaseYear )
         {
-            foreach (var movie in _movies)
-            {
-                if (String.Compare(movie?.Title, title, true) == 0)
-                    return movie;
-            };
+            var query = from movie in _movies
+                        select movie;
+            if (!String.IsNullOrEmpty(title))
+                query = query.Where(m => String.Compare(m.Title, title, true) == 0);
 
-            return null;
+            if (releaseYear > 0)
+                query = query.Where(m => m.ReleaseYear >= releaseYear);
+
+            return query.ToList();
         }
+
+        protected override Movie FindByTitle ( string title ) => (from movie in _movies 
+                                                                  where String.Compare(movie.Title, title, true) == 0
+                                                                  select movie).FirstOrDefault();
+        //Expression Body -//=> _movies.FirstOrDefault(m => String.Compare(m?.Title, title, true) == 0);
+        //{
+        //    foreach (var movie in _movies)
+        //    {
+        //        if (String.Compare(movie?.Title, title, true) == 0)
+        //            return movie;
+        //    };
+
+        //    return null;
+        //}
 
         private Movie CloneMovie ( Movie movie )
         {
@@ -129,16 +160,19 @@ namespace MovieLibrary.Business.Memory
             //return item;
         }
 
-        protected override Movie FindById ( int id )
-        {
-            foreach (var movie in _movies)
-            {
-                if (movie.Id == id)
-                    return movie;
-            };
+        //private bool IsId ( Movie movie ) => movie.Id == id;
+        protected override Movie FindById ( int id ) =>_movies.FirstOrDefault(m => m.Id == id);
+        //{
+        //    _movies.FirstOrDefault(m => m.Id == id);
 
-            return null;
-        }
+        //    foreach (var movie in _movies)
+        //    {
+        //        if (movie.Id == id)
+        //            return movie;
+        //    };
+
+        //    return null;
+        //}
 
         //private readonly Movie[] _movies = new Movie[100];
         private readonly List<Movie> _movies = new List<Movie>();
