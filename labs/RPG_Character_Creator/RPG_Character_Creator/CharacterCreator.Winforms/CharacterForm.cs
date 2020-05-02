@@ -103,9 +103,10 @@ namespace CharacterCreator.Winforms
         private void OnOK ( object sender, EventArgs e )
         {
             var character = GetCharacter();
-            if (!character.Validate(out var error))
+            var errors = ObjectValidator.Validate(character);
+            if (errors.Any())
             {
-                DisplayError(error);
+                DisplayError("Error");
                 return;
             };
 

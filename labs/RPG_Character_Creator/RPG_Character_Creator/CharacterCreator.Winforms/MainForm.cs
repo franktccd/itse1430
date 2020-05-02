@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using CharacterCreator.Memory;
 
 namespace CharacterCreator.Winforms
 {
@@ -19,6 +20,7 @@ namespace CharacterCreator.Winforms
         public MainForm()
         {
             InitializeComponent();
+            _characters = new MemoryCharacterRoster();
         }
 
         private bool DisplayConfirmation(string message, string character)
@@ -33,14 +35,6 @@ namespace CharacterCreator.Winforms
         }
 
 
-        protected override void OnFormClosing(FormClosingEventArgs e)
-        {
-            base.OnFormClosing(e);
-
-            if (_character != null)
-                if (!DisplayConfirmation("Are you sure you want to close?", "Close"))
-                    e.Cancel = true;
-        }
         private void OnFileExit ( object sender, EventArgs e )
         {
             Close();
@@ -57,38 +51,103 @@ namespace CharacterCreator.Winforms
         {
             CharacterForm newCharacter = new CharacterForm();
 
-            if (newCharacter.ShowDialog(this) != DialogResult.OK)
-                return;
-            _character = newCharacter.Character;
-        }
+            do
+            {
+                if (newCharacter.ShowDialog(this) != DialogResult.OK)
+                    return;
+                try
+                {
+                    var character = _characters.Add(newCharacter.Character);
+                    if (character != null)
+                    {
+                        UpdateUI();
+                        return;
+                    }
+                } catch (Exception ex)
+                {
+                    DisplayError(ex.Message);
+                } 
+            } while (true);
 
-        private Character _character;
+            //if (newCharacter.ShowDialog(this) != DialogResult.OK)
+            //    return;
+            //_character = newCharacter.Character;
+        }
 
         private void OnCharacterEdit ( object sender, EventArgs e )
         {
-            if (_character == null)
+            var character = GetSelectedCharacter();
+            if (character == null)
             {
-                DisplayError("You need to create a new character before editing.");
+                DisplayError("Please select a character to edit.");
                 return;
             }
             var child = new CharacterForm();
 
-            child.Character = _character;
-            if (child.ShowDialog(this) != DialogResult.OK)
-                return;
-            _character = child.Character;
+            child.Character = character;
+            do
+            {
+                if (child.ShowDialog(this) != DialogResult.OK)
+                    return;
+                try
+                {
+                    _characters.Update(character.Id, child.Character);
+                    UpdateUI();
+                    return;
+                }
+                catch (Exception ex)
+                {
+                    DisplayError(ex.Message);
+                }
+            } while (true);
         }
 
         private void OnCharacterDelete ( object sender, EventArgs e )
         {
-            if (_character == null)
+            var character = GetSelectedCharacter();
+            if (character == null)
             {
                 DisplayError("There is no character to delete.");
                 return;
             }
-            if (!DisplayConfirmation("Are you sure you want to delete your character?", "Delete"))
+            if (!DisplayConfirmation($"Are you sure you want to delete {character.Name}?", "Delete"))
                 return;
-            _character = null;
+            try
+            {
+                _characters.Delete(character.Id);
+                UpdateUI();
+            } catch (Exception ex)
+            {
+                DisplayError(ex.Message);
+            };
+        }
+
+        private readonly ICharacterRoster _characters;
+
+        protected override void OnLoad ( EventArgs e )
+        {
+            base.OnLoad(e);
+
+            UpdateUI();
+        }
+
+        private Character GetSelectedCharacter()
+        {
+            var SelectedItems = lstCharacters.SelectedItems.OfType<Character>();
+            return SelectedItems.FirstOrDefault();
+        }
+
+        private void UpdateUI()
+        {
+            lstCharacters.Items.Clear();
+
+            var characters = from character in _characters.GetAll()
+                             where character.Id > 0
+                             orderby character.Name descending
+                             select character;
+
+            lstCharacters.Items.AddRange(characters.ToArray());
+
         }
     }
 }

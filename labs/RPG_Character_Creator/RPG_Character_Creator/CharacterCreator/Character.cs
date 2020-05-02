@@ -4,14 +4,18 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace CharacterCreator
 {
-    public class Character
+    public class Character : IValidatableObject
     {
+
+        public int Id { get; set; }
+
         public string Name
         {
             get { return _name ?? ""; }
@@ -38,60 +42,50 @@ namespace CharacterCreator
         }
         private string _description;
 
-        public bool Validate ( out string error )
+        public IEnumerable<ValidationResult> Validate ( ValidationContext validationContext )
         {
             if (String.IsNullOrEmpty(Name))
             {
-                error = "Name is required.";
-                return false;
+                yield return new ValidationResult("Name is required.", new[] { nameof(Name)});
             }
 
             if(Race == null)
             {
-                error = "Race is required";
-                return false;
+                yield return new ValidationResult("Race is required.", new[] { nameof(Race) });
             }
 
             if (Profession == null)
             {
-                error = "Profession is required";
-                return false;
+                yield return new ValidationResult("Profession is required.", new[] { nameof(Profession) });
             }
 
             if (Strength < 1 || Strength > 100)
             {
-                error = "Strength must be between 1 and 100";
-                return false;
+                yield return new ValidationResult("Strength must be between 1 and 100.", new[] { nameof(Strength) });
             }
             if (Agility < 1 || Agility > 100)
             {
-                error = "Agility must be between 1 and 100";
-                return false;
+                yield return new ValidationResult("Agility must be between 1 and 100.", new[] { nameof(Agility) });
             }
             if (Constitution < 1 || Constitution > 100)
             {
-                error = "Constitution must be between 1 and 100";
-                return false;
+                yield return new ValidationResult("Constituition must be between 1 and 100.", new[] { nameof(Constitution) });
             }
             if (Intelligence < 1 || Intelligence > 100)
             {
-                error = "Intelligence must be between 1 and 100";
-                return false;
+                yield return new ValidationResult("Intelligence must be between 1 and 100.", new[] { nameof(Intelligence) });
             }
             if (Wisdom < 1 || Wisdom > 100)
             {
-                error = "Wisdom must be between 1 and 100";
-                return false;
+                yield return new ValidationResult("Wisdom must be between 1 and 100.", new[] { nameof(Wisdom) });
             }
             if (Charisma < 1 || Charisma > 100)
             {
-                error = "Charisma must be between 1 and 100";
-                return false;
+                yield return new ValidationResult("Charisma must be between 1 and 100.", new[] { nameof(Charisma) });
             }
-
-            error = null;
-            return true;
         }
+
+
     }
 
     #region Race Class
